@@ -26,4 +26,20 @@ public class TodoController : ControllerBase
         var todoEntries = _todoEntryService.GetAllEntries();
         return Ok(todoEntries);
     }
+
+    [HttpPost]
+    public ActionResult<TodoEntryDto> SaveEntry([FromBody] TodoEntryDto todoEntryDto)
+    {
+        if (todoEntryDto.EntryId.HasValue && !todoEntryDto.EntryId.Value.Equals(Guid.Empty))
+        {
+            return Ok(_todoEntryService.UpdateEntry(todoEntryDto));
+        }
+        return Ok(_todoEntryService.CreateEntry(todoEntryDto));
+    }
+
+    [HttpDelete]
+    public ActionResult<TodoEntryDto> DeleteEntry(Guid entryId)
+    {
+        return Ok(_todoEntryService.DeleteEntry(entryId));
+    }
 }

@@ -57,7 +57,8 @@ public class TodoEntryService : ITodoEntryService
         {
             throw new TodoListException("No database entry found to update", HttpStatusCode.NotFound);
         }
-        _dbContext.TodoEntries.Update(new TodoEntry(entryDto.EntryId, entryDto.Name, entryDto.Done));
+        _dbContext.TodoEntries.Remove(oldEntry);
+        _dbContext.TodoEntries.Add(new TodoEntry(entryDto.EntryId, entryDto.Name, entryDto.Done));
         _dbContext.SaveChanges();
         var updatedEntry = _dbContext.TodoEntries.Where(x => x.EntryId.Equals(entryDto.EntryId)).SingleOrDefault();
         if (updatedEntry == null)
@@ -67,4 +68,15 @@ public class TodoEntryService : ITodoEntryService
         return updatedEntry.AsDto();
     }
 
+    TodoEntryDto ITodoEntryService.DeleteEntry(Guid entryId)
+    {
+        var deletedEntry = _dbContext.TodoEntries.Where(x => x.EntryId.Equals(entryId)).SingleOrDefault();
+        if (deletedEntry == null)
+        {
+            throw new TodoListException("No database entry found to delete", HttpStatusCode.NotFound);
+        }
+        _dbContext.TodoEntries.Remove(deletedEntry);
+        _dbContext.SaveChanges();
+        return deletedEntry.AsDto();
+    }
 }
