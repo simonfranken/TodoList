@@ -5,8 +5,10 @@ public class TodoEntry
     public string Name { get; set; }
     public bool Done { get; set; }
 
-    public TodoEntry(string name)
+    public TodoEntry(Guid? entryId, string name, bool done)
     {
+        EntryId = entryId.HasValue ? entryId.Value : Guid.NewGuid();
         Name = name;
+        Done = done;
     }
 }
