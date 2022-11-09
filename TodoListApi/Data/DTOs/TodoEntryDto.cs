@@ -1,3 +1,4 @@
+namespace TodoListApi.Data.DTOs;
 public class TodoEntryDto
 {
     public Guid? EntryId { get; set; }
