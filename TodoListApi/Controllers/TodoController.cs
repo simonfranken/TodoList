@@ -4,7 +4,7 @@ using TodoListApi.Services;
 
 namespace TodoListApi.Controllers;
 [Route("[Controller]/[Action]")]
-public class TodoController : Controller
+public class TodoController : ControllerBase
 {
     private readonly ITodoEntryService _todoEntryService;
 
@@ -18,5 +18,12 @@ public class TodoController : Controller
     {
         var todoEntry = _todoEntryService.GetEntryById(entryId);
         return todoEntry != null ? Ok(todoEntry) : NotFound();
+    }
+
+    [HttpGet]
+    public ActionResult<ICollection<TodoEntryDto>> GetAllEntries()
+    {
+        var todoEntries = _todoEntryService.GetAllEntries();
+        return Ok(todoEntries);
     }
 }
