@@ -17,7 +17,7 @@ public class TodoController : ControllerBase
     public ActionResult<TodoEntryDto> GetEntryById(Guid entryId)
     {
         var todoEntry = _todoEntryService.GetEntryById(entryId);
-        return todoEntry != null ? Ok(todoEntry) : NotFound();
+        return Ok(todoEntry);
     }
 
     [HttpGet]
