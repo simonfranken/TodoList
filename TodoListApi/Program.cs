@@ -5,17 +5,15 @@ using TodoListApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Using MySql database as ApplicationDbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options => options
     .UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 31))));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+// Dependency injection
 builder.Services.AddScoped<ITodoEntryService, TodoEntryService>();
 
 var app = builder.Build();
@@ -31,6 +29,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+// Using ErrorHandlingMiddleware
 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
 app.MapControllers();
