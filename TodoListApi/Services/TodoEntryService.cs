@@ -33,7 +33,7 @@ public class TodoEntryService : ITodoEntryService
     {
         if (entryDto.EntryId != null)
         {
-            throw new TodoListException("DTO does already have an id", HttpStatusCode.BadRequest);
+            throw new TodoListException("DTO already has an id", HttpStatusCode.BadRequest);
         }
         var entryModel = new TodoEntry(entryDto.EntryId, entryDto.Name, entryDto.Done);
         _dbContext.TodoEntries.Add(entryModel);
