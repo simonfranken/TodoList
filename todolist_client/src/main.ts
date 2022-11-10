@@ -5,8 +5,15 @@ import App from "./App.vue";
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/lib/iconsets/mdi";
+import * as VueRouter from "vue-router";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import { routes } from "./routes";
+
+const router = VueRouter.createRouter({
+  history: VueRouter.createWebHashHistory(),
+  routes: routes,
+});
 
 const vuetify = createVuetify({
   components,
@@ -20,4 +27,4 @@ const vuetify = createVuetify({
   },
 });
 
-createApp(App).use(vuetify).mount("#app");
+createApp(App).use(vuetify).use(router).mount("#app");
