@@ -1,11 +1,11 @@
 <template>
-  <div />
+  <v-layout>
+    <NavigationDrawer />
+    <v-main />
+  </v-layout>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "App",
-});
+import NavigationDrawer from "./components/NavigationDrawer.vue";
 </script>
