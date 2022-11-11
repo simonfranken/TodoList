@@ -1,12 +1,12 @@
-import type { route } from "@/models"
-import HomeView from "src/views/HomeView.vue"
+import type { route } from "@/models";
+import HomeView from "@/views/HomeView.vue";
 
 export const routes: route[] = [
   {
-    path: "/test",
+    path: "/",
     component: HomeView,
     key: "home",
     displayName: "Home",
     icon: "mdi-home",
   },
-]
+];
