@@ -4,6 +4,8 @@ import { routes } from "./router/routes";
 </script>
 
 <template>
-  <NavigationComponent :routes="routes" />
-  <div class="container"></div>
+  <NavigationComponent class="mb-3" :routes="routes" />
+  <div class="container">
+    <RouterView />
+  </div>
 </template>
