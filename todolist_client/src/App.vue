@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import NavigationComponent from "./components/NavigationComponent.vue";
+import { routes } from "./router/routes";
+</script>
 
 <template>
-  <RouterView></RouterView>
+  <NavigationComponent :routes="routes" />
+  <div class="container"></div>
 </template>
