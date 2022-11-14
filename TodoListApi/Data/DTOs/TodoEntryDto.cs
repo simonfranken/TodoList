@@ -3,12 +3,14 @@ public class TodoEntryDto
 {
     public Guid? EntryId { get; set; }
     public string Name { get; set; }
+    public string Description { get; set; }
     public bool Done { get; set; }
 
-    public TodoEntryDto(Guid? entryId, string name, bool done)
+    public TodoEntryDto(Guid? entryId, string name, string description, bool done)
     {
         EntryId = entryId;
         Name = name;
         Done = done;
+        Description = description;
     }
 }
