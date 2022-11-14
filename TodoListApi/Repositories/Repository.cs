@@ -18,7 +18,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEnti
         return _dbContext.Set<TEntity>().Find(entity.Id);
     }
 
-    public TEntity DeleteEntity(TEntity entity)
+    public TEntity? DeleteEntity(TEntity entity)
     {
         _dbContext.Set<TEntity>().Remove(entity);
         _dbContext.SaveChanges();
@@ -33,13 +33,6 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEnti
     public TEntity? GetEntityById(Guid id)
     {
         return _dbContext.Set<TEntity>().Find(id);
-    }
-
-    public TEntity? UpdateEntity(TEntity entity)
-    {
-        _dbContext.Set<TEntity>().Update(entity);
-        _dbContext.SaveChanges();
-        return _dbContext.Set<TEntity>().Find(entity.Id);
     }
 
     public IEnumerable<TEntity> Where(Func<TEntity, bool> predicate)
