@@ -3,80 +3,73 @@ using TodoListApi.Data;
 using TodoListApi.Data.DTOs;
 using TodoListApi.Data.Models;
 using TodoListApi.Error;
+using TodoListApi.Repositories;
 
 namespace TodoListApi.Services;
 
 public class TodoEntryService : ITodoEntryService
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IRepository<TodoEntry> _repository;
 
-    public TodoEntryService(ApplicationDbContext dbContext)
+    public TodoEntryService(IRepository<TodoEntry> repository)
     {
-        _dbContext = dbContext;
+        _repository = repository;
     }
 
-    public TodoEntryDto GetEntryById(Guid entryId)
+    public TodoEntryDto GetEntryById(Guid id)
     {
-        var todoEntry = _dbContext.TodoEntries.Where(x => x.EntryId.Equals(entryId)).SingleOrDefault()?.AsDto();
+        var todoEntry = _repository.GetEntityById(id);
         if (todoEntry == null)
         {
-            throw new TodoListException("Database entry not found", HttpStatusCode.NotFound);
+            throw new TodoListException("Entity not found", HttpStatusCode.NotFound);
         }
-        return todoEntry;
+        return todoEntry.AsDto();
     }
     public ICollection<TodoEntryDto> GetAllEntries()
     {
-        return _dbContext.TodoEntries.Where(x => true).Select(x => x.AsDto()).ToList();
+        return _repository.GetAllEntities().Select(x => x.AsDto()).ToList();
     }
 
     public TodoEntryDto CreateEntry(TodoEntryDto entryDto)
     {
-        if (entryDto.EntryId != null)
-        {
-            throw new TodoListException("DTO already has an id", HttpStatusCode.BadRequest);
-        }
-        var entryModel = new TodoEntry(entryDto.EntryId, entryDto.Name, entryDto.Description, entryDto.Done);
-        _dbContext.TodoEntries.Add(entryModel);
-        _dbContext.SaveChanges();
-        var createdEntry = _dbContext.TodoEntries.Where(x => x.EntryId.Equals(entryModel.EntryId)).SingleOrDefault();
+        var entryModel = new TodoEntry(null, entryDto.Name, entryDto.Description, entryDto.Done);
+        _repository.CreateEntity(entryModel);
+        var createdEntry = _repository.GetEntityById(entryModel.Id);
         if (createdEntry == null)
         {
-            throw new TodoListException("Database entry was not created", HttpStatusCode.InternalServerError);
+            throw new TodoListException("Entity was not created", HttpStatusCode.InternalServerError);
         }
         return createdEntry.AsDto();
     }
 
     public TodoEntryDto UpdateEntry(TodoEntryDto entryDto)
     {
-        if (entryDto.EntryId == null || entryDto.EntryId.Equals(Guid.Empty))
+        if (!entryDto.EntryId.HasValue)
         {
-            throw new TodoListException("DTO has no id", HttpStatusCode.BadRequest);
+            throw new TodoListException("Entity has no id", HttpStatusCode.BadRequest);
         }
-        var oldEntry = _dbContext.TodoEntries.Where(x => x.EntryId.Equals(entryDto.EntryId)).SingleOrDefault();
-        if (oldEntry == null)
+        var entry = _repository.GetEntityById(entryDto.EntryId.Value);
+        if (entry == null)
         {
-            throw new TodoListException("No database entry found to update", HttpStatusCode.NotFound);
+            throw new TodoListException("Entity to be updated was not found", HttpStatusCode.NotFound);
         }
-        _dbContext.TodoEntries.Remove(oldEntry);
-        _dbContext.TodoEntries.Add(new TodoEntry(entryDto.EntryId, entryDto.Name, entryDto.Description, entryDto.Done));
-        _dbContext.SaveChanges();
-        var updatedEntry = _dbContext.TodoEntries.Where(x => x.EntryId.Equals(entryDto.EntryId)).SingleOrDefault();
+        _repository.DeleteEntity(entry);
+        var updatedEntry = _repository.CreateEntity(new TodoEntry(entryDto.EntryId.Value, entryDto.Name, entryDto.Description, entryDto.Done));
         if (updatedEntry == null)
         {
-            throw new TodoListException("Updated database entry not found", HttpStatusCode.InternalServerError);
+            throw new TodoListException("Entity was not updated", HttpStatusCode.InternalServerError);
         }
         return updatedEntry.AsDto();
     }
 
     TodoEntryDto ITodoEntryService.DeleteEntry(Guid entryId)
     {
-        var deletedEntry = _dbContext.TodoEntries.Where(x => x.EntryId.Equals(entryId)).SingleOrDefault();
+        var deletedEntry = _repository.GetEntityById(entryId);
         if (deletedEntry == null)
         {
-            throw new TodoListException("No database entry found to delete", HttpStatusCode.NotFound);
+            throw new TodoListException("Entity to be deleted was not found", HttpStatusCode.NotFound);
         }
-        _dbContext.TodoEntries.Remove(deletedEntry);
-        _dbContext.SaveChanges();
+        _repository.DeleteEntity(deletedEntry);
         return deletedEntry.AsDto();
     }
 }
