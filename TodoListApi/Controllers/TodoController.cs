@@ -3,7 +3,9 @@ using TodoListApi.Data.DTOs;
 using TodoListApi.Services;
 
 namespace TodoListApi.Controllers;
-[Route("[Controller]/[Action]")]
+
+
+[Route("[Controller]")]
 public class TodoController : ControllerBase
 {
     private readonly ITodoEntryService _todoEntryService;
@@ -14,6 +16,7 @@ public class TodoController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{entryId}")]
     public ActionResult<TodoEntryDto> GetEntryById(Guid entryId)
     {
         var todoEntry = _todoEntryService.GetEntryById(entryId);

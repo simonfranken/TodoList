@@ -3,7 +3,7 @@ import type { TodoEntry } from "@/models";
 
 export const getAllEntries = async (): Promise<TodoEntry[]> => {
   try {
-    return (await axiosInstance.get("Todo/GetAllEntries")).data;
+    return (await axiosInstance.get("Todo")).data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -12,7 +12,7 @@ export const getAllEntries = async (): Promise<TodoEntry[]> => {
 
 export const saveEntry = async (todoEntry: TodoEntry): Promise<TodoEntry> => {
   try {
-    return (await axiosInstance.post("Todo/SaveEntry", todoEntry)).data;
+    return (await axiosInstance.post("Todo", todoEntry)).data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -21,7 +21,7 @@ export const saveEntry = async (todoEntry: TodoEntry): Promise<TodoEntry> => {
 
 export const deleteEntry = async (entryId: string): Promise<TodoEntry> => {
   try {
-    return await axiosInstance.delete("Todo/DeleteEntry", {
+    return await axiosInstance.delete("Todo", {
       params: {
         entryId: entryId,
       },
