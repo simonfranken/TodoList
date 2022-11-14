@@ -29,6 +29,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+// CORS
+app.UseCors(options => options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+
 // Using ErrorHandlingMiddleware
 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 

@@ -1,13 +1,11 @@
-<template>
-  <v-layout>
-    <NavigationDrawer v-bind:routes="routes" />
-    <v-main>
-      <RouterView></RouterView>
-    </v-main>
-  </v-layout>
-</template>
-
-<script lang="ts" setup>
-import NavigationDrawer from "./components/NavigationDrawer.vue";
-import { routes } from "./routes";
+<script setup lang="ts">
+import NavigationComponent from "./components/NavigationComponent.vue";
+import { routes } from "./router/routes";
 </script>
+
+<template>
+  <NavigationComponent class="mb-3" :routes="routes" />
+  <div class="container">
+    <RouterView />
+  </div>
+</template>
