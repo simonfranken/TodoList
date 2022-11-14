@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using TodoListApi.Data;
+using TodoListApi.Data.Models;
 using TodoListApi.Error;
+using TodoListApi.Repositories;
 using TodoListApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,8 @@ builder.Services.AddSwaggerGen();
 
 // Dependency injection
 builder.Services.AddScoped<ITodoEntryService, TodoEntryService>();
+
+builder.Services.AddScoped<IRepository<TodoEntry>, Repository<TodoEntry>>();
 
 var app = builder.Build();
 
