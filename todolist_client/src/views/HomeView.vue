@@ -11,7 +11,6 @@ getAllEntries().then((response) => {
 const handleChange = (updatedEntry: TodoEntry) => {
   saveEntry(updatedEntry).then((response) => {
     state.todoList.map((x) => (x.entryId == response.entryId ? response : x));
-    console.log(state.todoList);
   });
 };
 </script>
