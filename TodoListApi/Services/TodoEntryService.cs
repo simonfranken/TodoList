@@ -35,7 +35,7 @@ public class TodoEntryService : ITodoEntryService
         {
             throw new TodoListException("DTO already has an id", HttpStatusCode.BadRequest);
         }
-        var entryModel = new TodoEntry(entryDto.EntryId, entryDto.Name, entryDto.Done);
+        var entryModel = new TodoEntry(entryDto.EntryId, entryDto.Name, entryDto.Description, entryDto.Done);
         _dbContext.TodoEntries.Add(entryModel);
         _dbContext.SaveChanges();
         var createdEntry = _dbContext.TodoEntries.Where(x => x.EntryId.Equals(entryModel.EntryId)).SingleOrDefault();
@@ -58,7 +58,7 @@ public class TodoEntryService : ITodoEntryService
             throw new TodoListException("No database entry found to update", HttpStatusCode.NotFound);
         }
         _dbContext.TodoEntries.Remove(oldEntry);
-        _dbContext.TodoEntries.Add(new TodoEntry(entryDto.EntryId, entryDto.Name, entryDto.Done));
+        _dbContext.TodoEntries.Add(new TodoEntry(entryDto.EntryId, entryDto.Name, entryDto.Description, entryDto.Done));
         _dbContext.SaveChanges();
         var updatedEntry = _dbContext.TodoEntries.Where(x => x.EntryId.Equals(entryDto.EntryId)).SingleOrDefault();
         if (updatedEntry == null)
