@@ -30,39 +30,32 @@ public class TodoEntryService : ITodoEntryService
         return _repository.GetAllEntities().Select(x => x.AsDto()).ToList();
     }
 
-    public TodoEntryDto CreateEntry(TodoEntryDto entryDto)
+    public TodoEntryDto CreateOrUpdateEntry(TodoEntryDto entryDto)
     {
-        var entryModel = new TodoEntry(null, entryDto.Name, entryDto.Description, entryDto.Done);
-        _repository.CreateEntity(entryModel);
-        var createdEntry = _repository.GetEntityById(entryModel.Id);
-        if (createdEntry == null)
+        if (!entryDto.EntryId.HasValue || entryDto.EntryId.Equals(Guid.Empty))
         {
-            throw new TodoListException("Entity was not created", HttpStatusCode.InternalServerError);
+            var createdEntry = _repository.CreateEntity(new TodoEntry(null, entryDto.Name, entryDto.Description, entryDto.Done));
+            if (createdEntry == null)
+            {
+                throw new TodoListException("Entity was not created", HttpStatusCode.InternalServerError);
+            }
+            return createdEntry.AsDto();
         }
-        return createdEntry.AsDto();
-    }
-
-    public TodoEntryDto UpdateEntry(TodoEntryDto entryDto)
-    {
-        if (!entryDto.EntryId.HasValue)
-        {
-            throw new TodoListException("Entity has no id", HttpStatusCode.BadRequest);
-        }
-        var entry = _repository.GetEntityById(entryDto.EntryId.Value);
-        if (entry == null)
+        var updatedEntry = _repository.GetEntityById(entryDto.EntryId.Value);
+        if (updatedEntry == null)
         {
             throw new TodoListException("Entity to be updated was not found", HttpStatusCode.NotFound);
         }
-        _repository.DeleteEntity(entry);
-        var updatedEntry = _repository.CreateEntity(new TodoEntry(entryDto.EntryId.Value, entryDto.Name, entryDto.Description, entryDto.Done));
+        _repository.DeleteEntity(updatedEntry);
+        updatedEntry = _repository.CreateEntity(new TodoEntry(entryDto.EntryId, entryDto.Name, entryDto.Description, entryDto.Done));
         if (updatedEntry == null)
         {
-            throw new TodoListException("Entity was not updated", HttpStatusCode.InternalServerError);
+            throw new TodoListException("Updated entity was not created", HttpStatusCode.InternalServerError);
         }
         return updatedEntry.AsDto();
     }
 
-    TodoEntryDto ITodoEntryService.DeleteEntry(Guid entryId)
+    public TodoEntryDto DeleteEntry(Guid entryId)
     {
         var deletedEntry = _repository.GetEntityById(entryId);
         if (deletedEntry == null)
