@@ -18,9 +18,9 @@ public interface ITodoEntryService
     public ICollection<TodoEntryDto> GetAllEntries();
 
     /// <summary>
-    /// Update an existing TodoEntry by a DTO
+    /// Create or update a TodoEntry from a DTO
     /// </summary>
-    /// <param name="entryDto">the DTO from which the TodoEntry should be updated</param>
+    /// <param name="entryDto">the DTO from which the TodoEntry should be created or updated</param>
     /// <returns>the DTO of the updated TodoEntry</returns>
     public TodoEntryDto CreateOrUpdateEntry(TodoEntryDto entryDto);
 
