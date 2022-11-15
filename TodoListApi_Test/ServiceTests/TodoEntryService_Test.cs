@@ -109,7 +109,7 @@ public class TodoEntryService_Test
     }
 
     [Fact]
-    public void CreateOrUpdateEntry_InvalidGuid_TodoEntryDto()
+    public void CreateOrUpdateEntry_InvalidGuid_Exception()
     {
         var mock = new Mock<IRepository<TodoEntry>>();
         mock.Setup(mock => mock.GetEntityById(It.IsAny<Guid>())).Returns((TodoEntry?)null);
