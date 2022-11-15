@@ -11,40 +11,64 @@ namespace TodoListApi_Test;
 public class TodoEntryService_Test
 {
     private static Guid guid0 = Guid.NewGuid();
-    private static Guid guid1 = Guid.NewGuid();
-    private static TodoEntry todoEntry0 = new TodoEntry(guid0, "Test", "Test", false);
-    private static TodoEntry todoEntry1 = new TodoEntry(guid1, "Test", "Test", false);
+    private static TodoEntry todoEntry0 = new TodoEntry(guid0, "Test0", "Test", false);
+    private static TodoEntryDto todoEntryDto0 = new TodoEntryDto(null, "Test0", "Test", false);
 
 
     [Fact]
-    public void GetEntryById_Test()
+    public void GetEntryById_ValidId_TodoEntryDto()
     {
-        var mockRepo = new Mock<IRepository<TodoEntry>>();
-        mockRepo.Setup(mock => mock.GetEntityById(It.Is<Guid>(x => x.Equals(guid0)))).Returns(todoEntry0);
-        mockRepo.Setup(mock => mock.GetEntityById(It.Is<Guid>(x => x.Equals(guid1)))).Returns((TodoEntry?)null);
+        var mock = new Mock<IRepository<TodoEntry>>();
+        mock.Setup(mock => mock.GetEntityById(It.IsAny<Guid>())).Returns(todoEntry0);
 
-        var service = new TodoEntryService(mockRepo.Object);
+        var service = new TodoEntryService(mock.Object);
 
-        var result0 = service.GetEntryById(guid0);
-        Assert.IsType<TodoEntryDto>(result0);
-        Assert.Throws<TodoListException>(() => service.GetEntryById(guid1));
+        var result = service.GetEntryById(guid0);
+        Assert.IsType<TodoEntryDto>(result);
     }
 
     [Fact]
-    public void GetAllEntries_Test()
+    public void GetEntryById_InvalidId_Exception()
     {
-        var mockRepo = new Mock<IRepository<TodoEntry>>();
-        mockRepo.Setup(mock => mock.GetAllEntities()).Returns(new List<TodoEntry>() { todoEntry0, todoEntry1 });
+        var mock = new Mock<IRepository<TodoEntry>>();
+        mock.Setup(mock => mock.GetEntityById(It.IsAny<Guid>())).Returns((TodoEntry?)null);
 
-        var service = new TodoEntryService(mockRepo.Object);
+        var service = new TodoEntryService(mock.Object);
 
-        var result0 = service.GetAllEntries();
-        Assert.IsAssignableFrom<ICollection<TodoEntryDto>>(result0);
+        Assert.Throws<TodoListException>(() => service.GetEntryById(guid0));
     }
 
     [Fact]
-    public void CreateEntry_Test()
+    public void GetEntryById_RepositoryException_Exception()
     {
-        var mockRepo = new Mock<IRepository<TodoEntry>>();
+        var mock = new Mock<IRepository<TodoEntry>>();
+        mock.Setup(mock => mock.GetEntityById(It.IsAny<Guid>())).Throws(new Exception());
+
+        var service = new TodoEntryService(mock.Object);
+
+        Assert.Throws<Exception>(() => service.GetEntryById(guid0));
+    }
+
+    [Fact]
+    public void GetAllEntries_TodoEntryCollection()
+    {
+        var mock = new Mock<IRepository<TodoEntry>>();
+        mock.Setup(mock => mock.GetAllEntities()).Returns(new List<TodoEntry>() { todoEntry0 });
+
+        var service = new TodoEntryService(mock.Object);
+
+        var restult = service.GetAllEntries();
+        Assert.IsAssignableFrom<ICollection<TodoEntryDto>>(restult);
+    }
+
+    [Fact]
+    public void GetAllEntries_Exception()
+    {
+        var mock = new Mock<IRepository<TodoEntry>>();
+        mock.Setup(mock => mock.GetAllEntities()).Throws(new Exception());
+
+        var service = new TodoEntryService(mock.Object);
+
+        Assert.Throws<Exception>(() => service.GetAllEntries());
     }
 }

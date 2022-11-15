@@ -33,8 +33,7 @@ public class TodoEntryService : ITodoEntryService
     public TodoEntryDto CreateEntry(TodoEntryDto entryDto)
     {
         var entryModel = new TodoEntry(null, entryDto.Name, entryDto.Description, entryDto.Done);
-        _repository.CreateEntity(entryModel);
-        var createdEntry = _repository.GetEntityById(entryModel.Id);
+        var createdEntry = _repository.CreateEntity(entryModel);
         if (createdEntry == null)
         {
             throw new TodoListException("Entity was not created", HttpStatusCode.InternalServerError);
@@ -62,7 +61,7 @@ public class TodoEntryService : ITodoEntryService
         return updatedEntry.AsDto();
     }
 
-    TodoEntryDto ITodoEntryService.DeleteEntry(Guid entryId)
+    public TodoEntryDto DeleteEntry(Guid entryId)
     {
         var deletedEntry = _repository.GetEntityById(entryId);
         if (deletedEntry == null)
