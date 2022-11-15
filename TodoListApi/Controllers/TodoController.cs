@@ -33,11 +33,7 @@ public class TodoController : ControllerBase
     [HttpPost]
     public ActionResult<TodoEntryDto> SaveEntry([FromBody] TodoEntryDto todoEntryDto)
     {
-        if (todoEntryDto.EntryId.HasValue && !todoEntryDto.EntryId.Value.Equals(Guid.Empty))
-        {
-            return Ok(_todoEntryService.UpdateEntry(todoEntryDto));
-        }
-        return Ok(_todoEntryService.CreateEntry(todoEntryDto));
+        return _todoEntryService.CreateOrUpdateEntry(todoEntryDto);
     }
 
     [HttpDelete]

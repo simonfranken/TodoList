@@ -9,7 +9,7 @@ public interface ITodoEntryService
     /// </summary>
     /// <param name="entryId">the id of the requested TodoEntry</param>
     /// <returns>the DTO of the requested TodoEntry</returns>
-    public TodoEntryDto GetEntryById(Guid entryId);
+    public TodoEntryDto GetEntryById(Guid id);
 
     /// <summary>
     /// Get the DTO of all TodoEntries
@@ -22,14 +22,7 @@ public interface ITodoEntryService
     /// </summary>
     /// <param name="entryDto">the DTO from which the TodoEntry should be updated</param>
     /// <returns>the DTO of the updated TodoEntry</returns>
-    public TodoEntryDto UpdateEntry(TodoEntryDto entryDto);
-
-    /// <summary>
-    /// Create a TodoEntry from a DTO
-    /// </summary>
-    /// <param name="entryDto">the DTO from which the TodoEntry should be created</param>
-    /// <returns>the DTO of the created TodoEntry</returns>
-    public TodoEntryDto CreateEntry(TodoEntryDto entryDto);
+    public TodoEntryDto CreateOrUpdateEntry(TodoEntryDto entryDto);
 
     /// <summary>
     /// Delete a TodoEntry by its id
