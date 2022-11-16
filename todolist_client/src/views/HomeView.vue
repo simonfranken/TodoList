@@ -22,7 +22,7 @@ const reloadTodoList = () => {
   });
 };
 
-const handleChange = (updatedEntry: TodoEntry) => {
+const handleSave = (updatedEntry: TodoEntry) => {
   saveEntry(updatedEntry).then(() => {
     reloadTodoList();
   });
@@ -63,14 +63,14 @@ const handleDelete = (todoEntry: TodoEntry) => {
       v-for="todoEntry in state.todoList"
       :key="todoEntry.entryId"
       :todo-entry="todoEntry"
-      @on-change="handleChange"
+      @on-save="handleSave"
       @on-delete="handleDelete"
     />
     <TodoEntryComponent
       v-if="state.newEntry != null"
       :todo-entry="state.newEntry!"
       :edit-mode-default="true"
-      @on-change="handleSaveNew"
+      @on-save="handleSaveNew"
     />
   </div>
 </template>
