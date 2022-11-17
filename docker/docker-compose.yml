@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=TodoListDatabase
+  api:
+    build: ../TodoListApi/
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=mypass123
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=443
+    volumes:
+      - /mnt/c/Users/simon.franken/.Aspnet/https:/https/
+    ports:
+      - 5001:443
+  client:
+    build: ../todolist_client/
+    ports:
+      - 80:8080
