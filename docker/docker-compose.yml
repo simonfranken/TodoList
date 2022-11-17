@@ -7,6 +7,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=TodoListDatabase
+    volumes:
+      - ../data/:/var/lib/mysql
   api:
     build: ../TodoListApi/
     ports:
