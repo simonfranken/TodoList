@@ -1,5 +1,10 @@
 import axios from "axios";
 
+const protectedResources = {
+  TodoListAPI: {
+    endpoint: import.meta.env.VITE_API_ENDPOINT || "",
+  },
+};
 export const axiosInstance = axios.create({
-  baseURL: "https://localhost:7128/",
+  baseURL: protectedResources.TodoListAPI.endpoint,
 });
